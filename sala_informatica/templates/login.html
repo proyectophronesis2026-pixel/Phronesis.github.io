@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block titulo %}Iniciar sesión · {{ nombre_proyecto }}{% endblock %}
+
+{% block contenido %}
+<main class="pantalla-acceso">
+    <div class="tarjeta-acceso">
+        <div class="tarjeta-acceso__cabecera">
+            <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="{{ nombre_proyecto }}" class="logo-portada">
+            <span class="eyebrow">{{ lema_proyecto }}</span>
+            <h1>Iniciar sesión</h1>
+            <p>Accede para consultar y gestionar los equipos de la sala.</p>
+        </div>
+
+        {% if error %}
+        <p class="aviso aviso--error">{{ error }}</p>
+        {% endif %}
+        {% if exito %}
+        <p class="aviso aviso--exito">{{ exito }}</p>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('login') }}" class="formulario">
+            <label for="nombre_usuario">Usuario</label>
+            <input type="text" id="nombre_usuario" name="nombre_usuario" required autofocus autocomplete="username">
+
+            <label for="contrasena">Contraseña</label>
+            <input type="password" id="contrasena" name="contrasena" required autocomplete="current-password">
+
+            <button type="submit" class="boton boton--primario">Entrar</button>
+        </form>
+
+        <p class="tarjeta-acceso__pie">
+            <a href="{{ url_for('recuperar_contrasena') }}">¿Olvidaste tu contraseña?</a>
+        </p>
+        <p class="tarjeta-acceso__pie">
+            ¿No tienes cuenta? Pide a un administrador que te la cree.
+        </p>
+    </div>
+</main>
+{% endblock %}

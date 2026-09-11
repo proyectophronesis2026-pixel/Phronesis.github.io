@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block titulo %}Verificar código · {{ nombre_proyecto }}{% endblock %}
+
+{% block contenido %}
+<main class="pantalla-acceso">
+    <div class="tarjeta-acceso">
+        <div class="tarjeta-acceso__cabecera">
+            <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="{{ nombre_proyecto }}" class="logo-portada">
+            <span class="eyebrow">{{ lema_proyecto }}</span>
+            <h1>Verifica tu código</h1>
+            <p>Revisa tu correo: te enviamos un código de 6 dígitos que vence en {{ vigencia_minutos }} minutos.</p>
+        </div>
+
+        {% if error %}
+        <p class="aviso aviso--error">{{ error }}</p>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('verificar_codigo') }}" class="formulario">
+            <label for="codigo">Código de verificación</label>
+            <input type="text" id="codigo" name="codigo" inputmode="numeric" maxlength="6" pattern="\d{6}" required autofocus autocomplete="one-time-code">
+
+            <label for="nueva_contrasena">Contraseña nueva</label>
+            <input type="password" id="nueva_contrasena" name="nueva_contrasena" required autocomplete="new-password">
+
+            <label for="confirmar_contrasena">Confirmar contraseña nueva</label>
+            <input type="password" id="confirmar_contrasena" name="confirmar_contrasena" required autocomplete="new-password">
+
+            <button type="submit" class="boton boton--primario">Cambiar contraseña</button>
+        </form>
+
+        <p class="tarjeta-acceso__pie">
+            <a href="{{ url_for('cancelar_recuperacion') }}">Cancelar y pedir un código nuevo</a>
+        </p>
+    </div>
+</main>
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block titulo %}Inventario · {{ nombre_proyecto }}{% endblock %}
+
+{% block contenido %}
+<div class="app-shell">
+    <header class="cabecera">
+        <div class="cabecera__marca">
+            <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="{{ nombre_proyecto }}" class="logo-cabecera">
+            <div>
+                <span class="eyebrow">{{ nombre_proyecto }}</span>
+                <h1>Inventario de equipos</h1>
+            </div>
+        </div>
+        <div class="cabecera__usuario">
+            <span>Sesión de <strong>{{ usuario }}</strong> <span class="etiqueta-rol">({{ 'admin' if rol == 'admin' else 'consulta' }})</span></span>
+            {% if rol == 'admin' %}
+            <a href="{{ url_for('usuarios') }}" class="boton boton--fantasma">Gestión de usuarios</a>
+            {% endif %}
+            <a href="{{ url_for('logout') }}" class="boton boton--fantasma">Cerrar sesión</a>
+        </div>
+    </header>
+
+    <main class="contenedor">
+        <div class="barra-acciones">
+            <p class="contador" id="contador-equipos">Cargando equipos…</p>
+            {% if rol == 'admin' %}
+            <button type="button" class="boton boton--primario" id="btn-abrir-modal">+ Añadir equipo</button>
+            {% endif %}
+        </div>
+
+        <p id="mensaje-vacio" class="mensaje-vacio oculto">
+            {% if rol == 'admin' %}Todavía no hay equipos registrados. Pulsa «Añadir equipo» para dar de alta el primero.{% else %}Todavía no hay equipos registrados.{% endif %}
+        </p>
+
+        <p id="mensaje-error" class="aviso aviso--error oculto"></p>
+
+        <section class="grid-equipos" id="grid-equipos" aria-live="polite"></section>
+    </main>
+</div>
+
+<!-- Plantilla de tarjeta (la usa dashboard.js con <template> para no repetir HTML en JS) -->
+<template id="plantilla-tarjeta">
+    <article class="ficha-equipo">
+        <div class="ficha-equipo__cabecera">
+            <span class="ficha-equipo__numero"></span>
+            <span class="sello"></span>
+        </div>
+        <p class="ficha-equipo__marca"></p>
+        <p class="ficha-equipo__serial"></p>
+        <div class="ficha-equipo__acciones">
+            <a class="boton boton--secundario boton--pequeno" data-accion="ver">Ver ficha</a>
+            {% if rol == 'admin' %}
+            <button type="button" class="boton boton--peligro boton--pequeno" data-accion="eliminar">Eliminar</button>
+            {% endif %}
+        </div>
+    </article>
+</template>
+
+{% if rol == 'admin' %}
+<!-- Modal para añadir un equipo nuevo -->
+<div class="modal oculto" id="modal-nuevo-equipo">
+    <div class="modal__panel">
+        <h2>Añadir equipo</h2>
+        <p id="modal-error" class="aviso aviso--error oculto"></p>
+        <form id="form-nuevo-equipo" class="formulario">
+            <label for="numero_computador">Número de equipo</label>
+            <input type="text" id="numero_computador" name="numero_computador" placeholder="PC-01" required>
+
+            <label for="marca">Marca</label>
+            <input type="text" id="marca" name="marca" placeholder="Lenovo, HP, Dell…" required>
+
+            <label for="serial">Número de serie</label>
+            <input type="text" id="serial" name="serial" placeholder="Serial del fabricante" required>
+
+            <label for="estado">Estado</label>
+            <select id="estado" name="estado" required>
+                <option value="Activo">Activo</option>
+                <option value="En mantenimiento">En mantenimiento</option>
+                <option value="Dañado">Dañado</option>
+                <option value="De baja">De baja</option>
+            </select>
+
+            <label for="ficha_mantenimiento">Ficha de mantenimiento (notas)</label>
+            <textarea id="ficha_mantenimiento" name="ficha_mantenimiento" rows="3" placeholder="Observaciones, historial, incidencias…"></textarea>
+
+            <div class="modal__acciones">
+                <button type="button" class="boton boton--fantasma" id="btn-cancelar-modal">Cancelar</button>
+                <button type="submit" class="boton boton--primario">Guardar equipo</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endif %}
+
+<script>
+    const ROL_USUARIO = "{{ rol }}";
+</script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

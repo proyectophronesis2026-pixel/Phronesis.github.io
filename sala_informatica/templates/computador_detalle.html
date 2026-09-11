@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block titulo %}Ficha de equipo · {{ nombre_proyecto }}{% endblock %}
+
+{% block contenido %}
+<div class="app-shell">
+    <header class="cabecera">
+        <div class="cabecera__marca">
+            <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="{{ nombre_proyecto }}" class="logo-cabecera">
+            <div>
+                <span class="eyebrow">FICHA DE EQUIPO</span>
+                <h1 id="titulo-ficha">Cargando…</h1>
+            </div>
+        </div>
+        <a href="{{ url_for('index') }}" class="boton boton--fantasma">← Volver al inventario</a>
+    </header>
+
+    <main class="contenedor contenedor--estrecho">
+        <p id="mensaje-error" class="aviso aviso--error oculto"></p>
+
+        <form id="form-ficha" class="ficha-detalle">
+            <div class="ficha-detalle__cabecera">
+                <span class="sello" id="sello-estado"></span>
+                <div class="ficha-detalle__estado-editable oculto" id="contenedor-estado-select">
+                    <label for="estado">Estado</label>
+                    <select id="estado" name="estado">
+                        <option value="Activo">Activo</option>
+                        <option value="En mantenimiento">En mantenimiento</option>
+                        <option value="Dañado">Dañado</option>
+                        <option value="De baja">De baja</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="campo-ficha">
+                <label for="numero_computador">Número de equipo</label>
+                <input type="text" id="numero_computador" name="numero_computador" disabled required>
+            </div>
+
+            <div class="campo-ficha">
+                <label for="marca">Marca</label>
+                <input type="text" id="marca" name="marca" disabled required>
+            </div>
+
+            <div class="campo-ficha">
+                <label for="serial">Número de serie</label>
+                <input type="text" id="serial" name="serial" disabled required>
+            </div>
+
+            <div class="campo-ficha">
+                <label for="ficha_mantenimiento">Ficha de mantenimiento (notas)</label>
+                <textarea id="ficha_mantenimiento" name="ficha_mantenimiento" rows="5" disabled></textarea>
+            </div>
+
+            <p class="ficha-detalle__meta" id="fecha-registro"></p>
+
+            {% if rol in ('admin', 'editor') %}
+            <div class="ficha-detalle__acciones">
+                <button type="button" class="boton boton--primario" id="btn-editar">Editar ficha</button>
+                <button type="submit" class="boton boton--primario oculto" id="btn-guardar">Guardar cambios</button>
+                <button type="button" class="boton boton--fantasma oculto" id="btn-cancelar">Cancelar</button>
+                {% if rol == 'admin' %}
+                <button type="button" class="boton boton--peligro" id="btn-eliminar">Eliminar equipo</button>
+                {% endif %}
+            </div>
+            {% endif %}
+        </form>
+    </main>
+</div>
+
+<script>
+    // El id del computador viene del backend (de la URL /computador/<id>)
+    const COMPUTADOR_ID = {{ computador_id }};
+    const ROL_USUARIO = "{{ rol }}";
+</script>
+<script src="{{ url_for('static', filename='js/detalle.js') }}"></script>
+{% endblock %}

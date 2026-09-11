@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block titulo %}Recuperar contraseña · {{ nombre_proyecto }}{% endblock %}
+
+{% block contenido %}
+<main class="pantalla-acceso">
+    <div class="tarjeta-acceso">
+        <div class="tarjeta-acceso__cabecera">
+            <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="{{ nombre_proyecto }}" class="logo-portada">
+            <span class="eyebrow">{{ lema_proyecto }}</span>
+            <h1>Recuperar contraseña</h1>
+            <p>Escribe tu usuario o tu correo. Si tienes un correo registrado, te enviaremos un código de verificación.</p>
+        </div>
+
+        {% if error %}
+        <p class="aviso aviso--error">{{ error }}</p>
+        {% endif %}
+        {% if mensaje %}
+        <p class="aviso aviso--exito">{{ mensaje }}</p>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('recuperar_contrasena') }}" class="formulario">
+            <label for="identificador">Usuario o correo</label>
+            <input type="text" id="identificador" name="identificador" required autofocus>
+
+            <button type="submit" class="boton boton--primario">Enviar código</button>
+        </form>
+
+        <p class="tarjeta-acceso__pie">
+            <a href="{{ url_for('login') }}">← Volver a iniciar sesión</a>
+        </p>
+    </div>
+</main>
+{% endblock %}
